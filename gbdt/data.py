@@ -5,6 +5,23 @@ class DataSet:
     """
     分类问题默认标签列名称为label，二元分类标签∈{-1, +1}
     回归问题也统一使用label
+    The attributes:
+    self.field_type: 不能转化为数值类型的column，列出所有出现的值；可以转化为数值类型的column，设为set()
+    self.distinct_valueset: 只针对能都转化为数值类型的column，列出所以出现的值
+    self.instances: 按行来列出值
+
+    The methods:
+    `describe()`: 列出基本的统计结果，每个列有多少种不同的取值等
+    get_instances_idset(): 得到self.instances的keys
+    get_label_size(): int.查看label有几种取值    
+    get_label_valueset(): set. label的取值
+    size(): 返回样本数
+    get_instance(id): 查看某个id的所有值
+    get_attributes(): tuple. 返回所有的columns名
+
+    get_distinct_valueset(field)： 提取每个列的所有取值，结合了一下self.field_type和self.distinct_valueset，在describe()中用到
+    _construct_instance(fields): 构建self.instances
+    is_real_type_field(field): 判断这个列是否是数值型的
     """
     def __init__(self, filename):  # just for csv data format
         line_cnt = 0
