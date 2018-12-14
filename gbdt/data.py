@@ -6,6 +6,7 @@ class DataSet:
     分类问题默认标签列名称为label，二元分类标签∈{-1, +1}
     回归问题也统一使用label
     The attributes:
+    self.field_names: columns的名字
     self.field_type: 不能转化为数值类型的column，列出所有出现的值；可以转化为数值类型的column，设为set()
     self.distinct_valueset: 只针对能都转化为数值类型的column，列出所以出现的值
     self.instances: 按行来列出值
