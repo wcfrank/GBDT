@@ -1,3 +1,9 @@
+"""
+抽象类：RegressionLossFunction和ClassificationLossFunction，
+这两个类不能被实例化，而且也不定义方法，只是规定必须有什么方法，
+然后，在继承它的子类里面定义这个方法，相当于规定了接口。
+"""
+
 # -*- coding:utf-8 -*-
 from datetime import datetime
 import abc
@@ -93,6 +99,9 @@ class BinomialDeviance(ClassificationLossFunction):
         super(BinomialDeviance, self).__init__(1)
 
     def compute_residual(self, dataset, subset, f):
+        """Chao
+        因为数据的label是{-1，1}，所以计算残差用的是2倍，有系数2
+        """
         residual = {}
         for id in subset:
             y_i = dataset.get_instance(id)['label']
@@ -102,6 +111,7 @@ class BinomialDeviance(ClassificationLossFunction):
     def update_f_value(self, f, tree, leaf_nodes, subset, dataset, learn_rate, label=None):
         data_idset = set(dataset.get_instances_idset())
         subset = set(subset)
+        # chao：下面分成两部分，subset和非subset，其中subset的id最后都分布在leafnodes中
         for node in leaf_nodes:
             for id in node.get_idset():
                 f[id] += learn_rate*node.get_predict_value()
@@ -216,7 +226,7 @@ class GBDT:
 
             f = dict()  # 记录F_{m-1}的值
             self.loss.initialize(f, dataset)
-            for iter in range(1, self.max_iter+1):
+            for iter in range(1, self.max_iter+1): # Chao: 用决策树拟合的步数 m
                 subset = train_data
                 if 0 < self.sample_rate < 1:
                     subset = sample(subset, int(len(subset)*self.sample_rate))

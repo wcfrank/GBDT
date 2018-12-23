@@ -98,6 +98,8 @@ def construct_decision_tree(dataset, remainedSet, targets, depth, leaf_nodes, ma
                     instance = dataset.get_instance(Id)
                     value = instance[attribute]
                     # 将满足条件的放入左子树
+                    # Chao：如果这个attribute有1000种不同取值，subset中有500个Id，则下面的判断条件要运行5*10^5遍
+                    # Chao：枚举此attribute的每个取值，按照这个值划分subset的Id，分裂节点，找到loss最小的那个
                     if (is_real_type and value < attrValue)or(not is_real_type and value == attrValue):
                         leftIdSet.append(Id)
                     else:
