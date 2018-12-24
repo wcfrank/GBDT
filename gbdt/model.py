@@ -115,6 +115,8 @@ class BinomialDeviance(ClassificationLossFunction):
         for node in leaf_nodes:
             for id in node.get_idset():
                 f[id] += learn_rate*node.get_predict_value()
+        # chao：对于剩下这些不在subset中的Id（样本），带入已经构造好的决策树，得到取值。
+        # chao：这些Id也会经过树上节点的判断，进入一个leaf node，得到这个leaf node对应的值
         for id in data_idset-subset:
             f[id] += learn_rate*tree.get_predict_value(dataset.get_instance(id))
 
@@ -229,6 +231,8 @@ class GBDT:
             for iter in range(1, self.max_iter+1): # Chao: 用决策树拟合的步数 m
                 subset = train_data
                 if 0 < self.sample_rate < 1:
+                    # Chao： 这里只选择80%的Id来构造决策树。
+                    # Chao：未来，剩下20%的Id只是通过这个构造好的决策树的leafnodes得到取值
                     subset = sample(subset, int(len(subset)*self.sample_rate))
                 # 用损失函数的负梯度作为回归问题提升树的残差近似值
                 residual = self.loss.compute_residual(dataset, subset, f)
@@ -236,7 +240,7 @@ class GBDT:
                 targets = residual
                 tree = construct_decision_tree(dataset, subset, targets, 0, leaf_nodes, self.max_depth, self.loss, self.split_points)
                 self.trees[iter] = tree
-                self.loss.update_f_value(f, tree, leaf_nodes, subset, dataset, self.learn_rate)
+                self.loss.update_f_value(f, tree, leaf_nodes, subset, dataset, self.learn_rate) # Chao：更新每个Id（样本点）的值
                 if isinstance(self.loss, RegressionLossFunction):
                     # todo 判断回归的效果
                     pass
