@@ -96,7 +96,7 @@ class BinomialDeviance(ClassificationLossFunction):
         if n_classes != 2:
             raise ValueError("{0:s} requires 2 classes.".format(
                 self.__class__.__name__))
-        super(BinomialDeviance, self).__init__(1)
+        super(BinomialDeviance, self).__init__(1) # Chao: 二元分类的K为1
 
     def compute_residual(self, dataset, subset, f):
         """Chao
