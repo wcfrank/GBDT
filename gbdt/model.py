@@ -126,6 +126,9 @@ class BinomialDeviance(ClassificationLossFunction):
             f[id] = 0.0
 
     def update_ternimal_regions(self, targets, idset):
+        """Chao:
+        Friedman paper：这里用Newton-Raphson来近似表达这个步长
+        """
         sum1 = sum([targets[id] for id in idset])
         if sum1 == 0:
             return sum1
